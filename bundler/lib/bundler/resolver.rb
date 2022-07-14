@@ -33,7 +33,6 @@ module Bundler
       @platforms = platforms
       @resolving_only_for_ruby = platforms == [Gem::Platform::RUBY]
       @gem_version_promoter = gem_version_promoter
-      @use_gvp = Bundler.feature_flag.use_gem_version_promoter_for_major_updates? || !@gem_version_promoter.major?
     end
 
     def start(requirements, exclude_specs: [])
@@ -124,7 +123,7 @@ module Bundler
           locked_requirement = vertex.payload.requirement
         end
 
-        if !@prerelease_specified[name] && (!@use_gvp || locked_requirement.nil?)
+        if !@prerelease_specified[name] && locked_requirement.nil?
           # Move prereleases to the beginning of the list, so they're considered
           # last during resolution.
           pre, results = results.partition {|spec| spec.version.prerelease? }
@@ -165,13 +164,7 @@ module Bundler
         else
           []
         end
-        # GVP handles major itself, but it's still a bit risky to trust it with it
-        # until we get it settled with new behavior. For 2.x it can take over all cases.
-        if !@use_gvp
-          spec_groups
-        else
-          @gem_version_promoter.sort_versions(dependency, spec_groups)
-        end
+        @gem_version_promoter.sort_versions(dependency, spec_groups)
       end
     end
 
