@@ -123,13 +123,6 @@ module Bundler
           locked_requirement = vertex.payload.requirement
         end
 
-        if !@prerelease_specified[name] && locked_requirement.nil?
-          # Move prereleases to the beginning of the list, so they're considered
-          # last during resolution.
-          pre, results = results.partition {|spec| spec.version.prerelease? }
-          results = pre + results
-        end
-
         spec_groups = if results.any?
           nested = []
           results.each do |spec|
