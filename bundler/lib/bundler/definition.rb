@@ -106,6 +106,7 @@ module Bundler
         @locked_gems    = nil
         @locked_deps    = {}
         @locked_specs   = SpecSet.new([])
+        @originally_locked_specs = @locked_specs
         @locked_sources = []
         @locked_platforms = []
       end
@@ -149,7 +150,7 @@ module Bundler
     end
 
     def gem_version_promoter
-      @gem_version_promoter ||= GemVersionPromoter.new(@originally_locked_specs || SpecSet.new([]), @unlock[:gems])
+      @gem_version_promoter ||= GemVersionPromoter.new(@originally_locked_specs, @unlock[:gems])
     end
 
     def resolve_only_locally!

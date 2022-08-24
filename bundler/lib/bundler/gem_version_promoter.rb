@@ -123,8 +123,8 @@ module Bundler
     end
 
     def sort_dep_specs(spec_groups, locked_spec)
-      @locked_version = locked_spec.version if locked_spec
-      @gem_name = locked_spec.name if locked_spec
+      @locked_version = locked_spec&.version
+      @gem_name = locked_spec&.name
 
       result = spec_groups.sort do |a, b|
         @a_ver = a.version
