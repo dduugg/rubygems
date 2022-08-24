@@ -149,18 +149,7 @@ module Bundler
     end
 
     def gem_version_promoter
-      @gem_version_promoter ||= begin
-        locked_specs =
-          if unlocking? && @locked_specs.empty? && !@lockfile_contents.empty?
-            # Definition uses an empty set of locked_specs to indicate all gems
-            # are unlocked, but GemVersionPromoter needs the locked_specs
-            # for conservative comparison.
-            Bundler::SpecSet.new(@locked_gems.specs)
-          else
-            @locked_specs
-          end
-        GemVersionPromoter.new(locked_specs, @unlock[:gems])
-      end
+      @gem_version_promoter ||= GemVersionPromoter.new(@originally_locked_specs || SpecSet.new([]), @unlock[:gems])
     end
 
     def resolve_only_locally!
