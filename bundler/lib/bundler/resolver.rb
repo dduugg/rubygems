@@ -122,9 +122,9 @@ module Bundler
           locked_requirement = vertex.payload.requirement
         end
 
-        spec_groups = if results.any?
+        if results.any?
           nested = []
-          results.each do |spec|
+          @gem_version_promoter.sort_versions(dependency, results).each do |spec|
             version, specs = nested.last
             if version == spec.version
               specs << spec
@@ -156,7 +156,6 @@ module Bundler
         else
           []
         end
-        @gem_version_promoter.sort_versions(dependency, spec_groups)
       end
     end
 
